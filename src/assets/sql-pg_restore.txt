@@ -1,0 +1,14 @@
+docker run --name postgres -e POSTGRES_PASSWORD=admpostgres -v /opt/scom_data:/var/lib/postgresql/data -p 5434:5432 -d postgres:9.6
+
+docker exec -i name-container psql -U postgres -d name-db -1 < "dirección-file.sql"
+docker exec -i name-container pg_restore -U postgres -d name-db -1 < "dirección-file.backup"
+
+docker exec -i dockercompose_erkrechum_1 psql -U postgres -d ErkCfg -1 < /root/eureka.sql
+
+docker exec -i dockercompose_erkrechum_1 psql -U postgres -d ErkCfg -1 < /root/eureka-restricciones.sql
+
+docker exec -i dockercompose_erkrechum_1 pg_restore -U postgres -d erk -1 < "/root/ErkBackupCustom.backup"
+
+docker exec -i dockercompose_postgres_1 psql -U postgres -d gune -1 < /root/gune_20201014-10.backup
+
+pg_restore -i -h 192.168.100.182 -p 5434 -U postgres -d erk -v "C:\Users\Toranzo\Desktop\!ERK\ErkBackupCustom.backup"

@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model categorias {
+  id              Int               @id @default(autoincrement())
+  categoria       String            @db.VarChar
+  investigaciones investigaciones[]
+}
+
+model investigaciones {
+  id           Int        @id @default(autoincrement())
+  titulo       String     @db.VarChar
+  autor        String     @db.VarChar
+  resumen      String     @db.VarChar
+  fecha        DateTime   @default(dbgenerated("CURRENT_DATE")) @db.Timestamp(6)
+  categoria_id Int
+  user_id      Int
+  file_url     String     @db.VarChar
+  file_name    String     @db.VarChar
+  categorias    categorias @relation(fields: [categoria_id], references: [id])
+  users         users      @relation(fields: [user_id], references: [id])
+}
+
+model roles {
+  id    Int     @id @default(autoincrement())
+  rol   String  @db.VarChar
+  users users[]
+}
+
+model users {
+  id              Int               @id @default(autoincrement())
+  username        String            @unique @db.VarChar
+  password        String            @db.VarChar
+  email           String            @unique @db.VarChar
+  rol_id          Int
+  roles           roles             @relation(fields: [rol_id], references: [id])
+  investigaciones investigaciones[]
+}
